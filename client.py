@@ -11,6 +11,7 @@ txt = ""
 def press(id):
     if id == 10:
         submit()
+        return
     if len(txt) > 0 and id == 12:
         txt = txt[:-1]
     if len(txt) <= max_len:
@@ -18,6 +19,7 @@ def press(id):
             txt += str(id)
         elif id == 11:
             txt += "0"
+    lcd.message("ID: " + txt + "\nYour message here.")
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(row_pins, GPIO.OUT)
