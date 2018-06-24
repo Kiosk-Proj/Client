@@ -1,5 +1,5 @@
 from enum import Enum
-
+import socket
 
 class DeviceType(Enum):
     KIOSK = 0
@@ -63,24 +63,27 @@ class Message:
 
 
 class Connection:
-    ip_to = "127.0.0.1"
-    port = 4300
     connection = None
 
-    def __init__(self):
-        pass
+    def __init__(self, ip, port):
+        self.ip_address = ip
+        self.port = port
 
     def connect(self):
-        print("CONNECTED TO SERVER", self.ip_to, self.port)
+        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connection.connect((self.ip_address, self.port))
+        print("CONNECTED TO SERVER", self.ip_address, self.port)
 
     def close(self):
-        print("CLOSED CONNECTION TO SERVER", self.ip_to, self.port)
+        self.connection.close()
+        print("CLOSED CONNECTION TO SERVER", self.ip_address, self.port)
 
     def send(self, message):
-        print(self.ip_to, self.port, message.get_binary(), len(message.get_binary())) # convert binary string to hex
+        self.connection.sendall(message.get_binary())
+        print("SEND", self.ip_address, self.port, message.get_binary(), len(message.get_binary())) # convert binary string to hex
 
     def recieve(self):
-        data = Message(MessageType.INPUT_RESPONSE,575,bytes("Alexander Weiss", 'UTF-8')).get_binary()
+        data = self.connection.recv(4096)
         return Message.message_from_bytes(data)
 
     def ack(self):
