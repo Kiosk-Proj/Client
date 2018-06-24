@@ -11,6 +11,25 @@ col_pins = [19,20,21]
 color_pins = [18,23]
 txt = ""
 
+color_dict = {
+        "white": 0,
+        "hotpink": 1,
+        "yellow": 2,
+        "red": 3,
+        "babyblue": 4,
+        "darkblue": 5,
+        "green": 6,
+        "null": 7
+}
+
+def set_color(color):
+    port1 = color & 0b1
+    port0 = (color >> 1) & 0b1
+    back = (color >> 2) & 0b1
+    GPIO.output(color_pins[1], port1)
+    GPIO.output(color_pins[0], port0)
+    lcd.set_backlight(back)
+
 def send_to_server():
 	return
 
@@ -30,7 +49,7 @@ def submit():
 	lcd.message("Are you sure?")
 	GPIO.output(row_pins[3], GPIO.HIGH)
 
-	time.sleep(1)	
+	time.sleep(0.25)	
 	while True:
 		if(GPIO.input(col_pins[0])):
 			lcd.set_cursor(0, 1)
@@ -87,7 +106,7 @@ while True:
         GPIO.output(rp, GPIO.HIGH)
         for cp in col_pins:
             button_id += 1
-            print(str(button_id) + " " + str(GPIO.input(cp)) + " " + str(rp) + ", " + str(cp))            
+            #print(str(button_id) + " " + str(GPIO.input(cp)) + " " + str(rp) + ", " + str(cp))            
             current = GPIO.input(cp)
             if current and not buttons_pressed[button_id - 1]:
                 buttons_pressed[button_id - 1] = True            
