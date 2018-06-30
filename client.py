@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import Adafruit_CharLCD as LCDLib
 import math
 import time
+import random
 
 lcd = LCDLib.Adafruit_CharLCDBackpack()
 lcd.set_backlight(0)
@@ -31,6 +32,22 @@ def set_color(color):
     lcd.set_backlight(back)
 
 def send_to_server():
+	lcd.set_cursor(0,1)
+	lcd.message("Checking...  ")
+	#sends
+	time.sleep(1)
+	
+	if(int (random.randrange(2))):
+		set_color(6)
+		lcd.set_cursor(0,1)
+		lcd.message("ID is valid       ")
+	else:
+		set_color(3)
+		lcd.set_cursor(0,1)
+		lcd.message("ID is invalid     ")
+		
+	time.sleep(.5)
+	set_color(7)
 	return
 
 def reset():
@@ -99,7 +116,7 @@ lcd.show_cursor(True)
 lcd.home()
 lcd.message("ID: ")
 
-
+set_color(7)
 while True:
     button_id = 0
     for rp in row_pins:
