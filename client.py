@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import Adafruit_CharLCD as LCDLib
 import math
 import time
+import random
 
 lcd = LCDLib.Adafruit_CharLCDBackpack()
 lcd.set_backlight(0)
@@ -11,7 +12,42 @@ col_pins = [19,20,21]
 color_pins = [18,23]
 txt = ""
 
+color_dict = {
+        "white": 0,
+        "hotpink": 1,
+        "yellow": 2,
+        "red": 3,
+        "babyblue": 4,
+        "darkblue": 5,
+        "green": 6,
+        "null": 7
+}
+
+def set_color(color):
+    port1 = color & 0b1
+    port0 = (color >> 1) & 0b1
+    back = (color >> 2) & 0b1
+    GPIO.output(color_pins[1], port1)
+    GPIO.output(color_pins[0], port0)
+    lcd.set_backlight(back)
+
 def send_to_server():
+	lcd.set_cursor(0,1)
+	lcd.message("Checking...  ")
+	#sends
+	time.sleep(1)
+	
+	if(int (random.randrange(2))):
+		set_color(6)
+		lcd.set_cursor(0,1)
+		lcd.message("ID is valid       ")
+	else:
+		set_color(3)
+		lcd.set_cursor(0,1)
+		lcd.message("ID is invalid     ")
+		
+	time.sleep(.5)
+	set_color(7)
 	return
 
 def reset():
@@ -30,7 +66,7 @@ def submit():
 	lcd.message("Are you sure?")
 	GPIO.output(row_pins[3], GPIO.HIGH)
 
-	time.sleep(1)	
+	time.sleep(0.25)	
 	while True:
 		if(GPIO.input(col_pins[0])):
 			lcd.set_cursor(0, 1)
@@ -80,14 +116,14 @@ lcd.show_cursor(True)
 lcd.home()
 lcd.message("ID: ")
 
-
+set_color(7)
 while True:
     button_id = 0
     for rp in row_pins:
         GPIO.output(rp, GPIO.HIGH)
         for cp in col_pins:
             button_id += 1
-            print(str(button_id) + " " + str(GPIO.input(cp)) + " " + str(rp) + ", " + str(cp))            
+            #print(str(button_id) + " " + str(GPIO.input(cp)) + " " + str(rp) + ", " + str(cp))            
             current = GPIO.input(cp)
             if current and not buttons_pressed[button_id - 1]:
                 buttons_pressed[button_id - 1] = True            
