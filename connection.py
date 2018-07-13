@@ -53,8 +53,8 @@ class Message:
     @staticmethod
     def message_from_bytes(bytestring):
         x = Message(0,0,0)
-        x.messageType = MessageType(int.from_bytes(bytestring[0:4], byteorder='big'))
-        x.transactionID = int.from_bytes(bytestring[4:12], byteorder='big')
+        x.messageType = MessageType(int.from_bytes(bytestring[0:4], byteorder='big', signed=False))
+        x.transactionID = int.from_bytes(bytestring[4:12], byteorder='big', signed=False)
         x.messageValue = bytestring[16:]
         return x
 
@@ -79,7 +79,9 @@ class Connection:
         print("CLOSED CONNECTION TO SERVER", self.ip_address, self.port)
 
     def send(self, message):
-        self.connection.sendall(message.get_binary())
+        binary = message.get_binary()
+        print(binary)
+        self.connection.sendall(binary)
         print("SEND", self.ip_address, self.port, message.get_binary(), len(message.get_binary())) # convert binary string to hex
 
     def recieve(self):
