@@ -80,7 +80,7 @@ class Connection:
 
     def send(self, message):
         binary = message.get_binary()
-        print(binary)
+        #print(binary)
         self.connection.sendall(binary)
         print("SEND", self.ip_address, self.port, message.get_binary(), len(message.get_binary())) # convert binary string to hex
 
