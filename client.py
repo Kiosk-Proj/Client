@@ -3,6 +3,7 @@ import Adafruit_CharLCD as LCDLib
 import math
 import time
 import random
+import connection
 
 lcd = LCDLib.Adafruit_CharLCDBackpack()
 lcd.set_backlight(0)
@@ -11,16 +12,20 @@ row_pins = [13,12,6,16]
 col_pins = [19,20,21]
 color_pins = [18,23]
 txt = ""
+server_ip = "96.225.21.203"
+server_port = 25565
+server_connection = Connection(server_ip, server_port)
+server_connections.connect()
 
 color_dict = {
-        "white": 0,
-        "hotpink": 1,
-        "yellow": 2,
-        "red": 3,
-        "babyblue": 4,
-        "darkblue": 5,
-        "green": 6,
-        "null": 7
+    "white": 0,
+    "hotpink": 1,
+    "yellow": 2,
+    "red": 3,
+    "babyblue": 4,
+    "darkblue": 5,
+    "green": 6,
+    "null": 7
 }
 
 def set_color(color):
@@ -32,59 +37,61 @@ def set_color(color):
     lcd.set_backlight(back)
 
 def send_to_server():
-	lcd.set_cursor(0,1)
-	lcd.message("Checking...  ")
-	#sends
-	time.sleep(1)
-	
-	if(int (random.randrange(2))):
-		set_color(6)
-		lcd.set_cursor(0,1)
-		lcd.message("ID is valid       ")
-	else:
-		set_color(3)
-		lcd.set_cursor(0,1)
-		lcd.message("ID is invalid     ")
-		
-	time.sleep(.5)
-	set_color(7)
-	return
+    lcd.set_cursor(0,1)
+    lcd.message("Checking...  ")
+    #sends
+    print(myConnection.send(Message(MessageType.CONNECTION, 0, b'\00\00')))
+    response = myConnection.message_protocol(Message(MessageType.INPUT, 0, 12598))
+    
+    if response.transactionID != -1:
+        set_color(color_dict['green'])
+        lcd.set_cursor(0,1)
+        name = response.messageValue[4:][1::2].decode('utf-8')
+        lcd.message("ID is valid       \n" + name)
+    else:
+        set_color(color_dict['red'])
+        lcd.set_cursor(0,1)
+        lcd.message("ID is invalid     ")
+        
+    time.sleep(.5)
+    set_color(color_dict['null'])
+    return
+
 
 def reset():
-	global txt
-	txt = ""
-	print("RESETTING")
-	lcd.set_cursor(0,1)
-	lcd.message("             ")
-	lcd.home()
-	lcd.message("ID:      ")
-	lcd.set_cursor(4, 0)
-	return
+    global txt
+    txt = ""
+    print("RESETTING")
+    lcd.set_cursor(0,1)
+    lcd.message("         ")
+    lcd.home()
+    lcd.message("ID:      ")
+    lcd.set_cursor(4, 0)
+    return
 
 def submit():
-	lcd.set_cursor(0,1)
-	lcd.message("Are you sure?")
-	GPIO.output(row_pins[3], GPIO.HIGH)
+    lcd.set_cursor(0,1)
+    lcd.message("Are you sure?")
+    GPIO.output(row_pins[3], GPIO.HIGH)
 
-	time.sleep(0.25)	
-	while True:
-		if(GPIO.input(col_pins[0])):
-			lcd.set_cursor(0, 1)
-			lcd.message("             ")
-			lcd.set_cursor(4+len(txt), 0)
-			
-			while True:
-				if(not GPIO.input(col_pins[0])):
-			 		return
-		elif(GPIO.input(col_pins[2])):
-			send_to_server()
-			reset()
-			return
-		
+    time.sleep(0.25)    
+    while True:
+        if(GPIO.input(col_pins[0])):
+            lcd.set_cursor(0, 1)
+            lcd.message("         ")
+            lcd.set_cursor(4+len(txt), 0)
+            
+            while True:
+                if(not GPIO.input(col_pins[0])):
+                     return
+        elif(GPIO.input(col_pins[2])):
+            send_to_server()
+            reset()
+            return
+        
 
 appears = False
 def press(id):
-
     global txt
     if id == 12 and len(txt) == 5:
         submit()
@@ -105,8 +112,9 @@ def press(id):
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(row_pins, GPIO.OUT)
 GPIO.setup(color_pins, GPIO.OUT)
-GPIO.setup(col_pins, GPIO.IN, pull_up_down=GPIO.PUD_DOWN	)
+GPIO.setup(col_pins, GPIO.IN, pull_up_down=GPIO.PUD_DOWN    )
 GPIO.output(row_pins, GPIO.LOW)
+
 buttons_pressed = [False] * 12
 pressing = False
 current = -1
@@ -120,27 +128,15 @@ set_color(7)
 while True:
     button_id = 0
     for rp in row_pins:
-        GPIO.output(rp, GPIO.HIGH)
-        for cp in col_pins:
-            button_id += 1
-            #print(str(button_id) + " " + str(GPIO.input(cp)) + " " + str(rp) + ", " + str(cp))            
-            current = GPIO.input(cp)
-            if current and not buttons_pressed[button_id - 1]:
-                buttons_pressed[button_id - 1] = True            
-                press(button_id)
-            elif not current and buttons_pressed[button_id - 1]:
-                buttons_pressed[button_id - 1] = False
-            
-#if GPIO.input(cp):
-            #    if not pressing:
-            #        pressing = True
-            #        current = button_id
-            #        press(button_id)
-            #elif GPIO.input(cp) and not button_id==current: 
-            #    pressing = True
-            #else:
-            #   pressing = False
-             #   current = -1
-            #update()
-        GPIO.output(rp, GPIO.LOW)
+    GPIO.output(rp, GPIO.HIGH)
+    for cp in col_pins:
+        button_id += 1
+        #print(str(button_id) + " " + str(GPIO.input(cp)) + " " + str(rp) + ", " + str(cp))        
+        current = GPIO.input(cp)
+        if current and not buttons_pressed[button_id - 1]:
+        buttons_pressed[button_id - 1] = True        
+        press(button_id)
+        elif not current and buttons_pressed[button_id - 1]:
+        buttons_pressed[button_id - 1] = False
+    GPIO.output(rp, GPIO.LOW)
 GPIO.cleanup()
