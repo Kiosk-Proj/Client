@@ -87,24 +87,24 @@ def submit():
     lcd.message("Are you sure?")
     GPIO.output(row_pins[3], GPIO.HIGH)
 
-	#waits for a second enter or delete press
-	time.sleep(0.25)	
-	while True:
-		#if delete is pressed get rid of the message on line 2 and return to id input
-		if(GPIO.input(col_pins[0])):
-			lcd.set_cursor(0, 1)
-			lcd.message("             ")
-			lcd.set_cursor(4+len(txt), 0)
-			
-			#waits until delete is released to return to id input so that no number is deleted
-			while True:
-				if(not GPIO.input(col_pins[0])):
-			 		return
-	 #if enter is pressed send to the server and reset
-		elif(GPIO.input(col_pins[2])):
-			send_to_server()
-			reset()
-			return
+    #waits for a second enter or delete press
+    time.sleep(0.25)	
+    while True:
+    #if delete is pressed get rid of the message on line 2 and return to id input
+        if(GPIO.input(col_pins[0])):
+            lcd.set_cursor(0, 1)
+            lcd.message("             ")
+            lcd.set_cursor(4+len(txt), 0)
+
+            #waits until delete is released to return to id input so that no number is deleted
+            while True:
+                if(not GPIO.input(col_pins[0])):
+                    return
+        #if enter is pressed send to the server and reset
+        elif(GPIO.input(col_pins[2])):
+            send_to_server()
+            reset()
+            return
 		
 def press(id):
     global txt
