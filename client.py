@@ -3,9 +3,11 @@ import Adafruit_CharLCD as LCDLib
 import math
 import time
 import random
-import connection
+#import connection
+from aldenC import *
 from subprocess import call	
 
+kioskNumber = 1
 lcd = LCDLib.Adafruit_CharLCDBackpack()
 print("Initalized lcd library")
 lcd.set_backlight(0)
@@ -14,16 +16,16 @@ row_pins = [16,6,12,13]
 col_pins = [19,20,21]
 color_pins = [18,23]
 txt = ""
-server_ip = "96.225.21.203"
-server_port = 25565
-server_connection = Connection(server_ip, server_port)
-server_connections.connect()
+#server_ip = "96.225.21.203"
+#server_port = 25565
+#server_connection = Connection(server_ip, server_port)
+#server_connections.connect()
 
-lcd.message("ID: ")
-server_ip = "96.225.21.203"
-server_port = 25565
-server_connection = connection.Connection(server_ip,server_port)
-server_connection.connect()
+#lcd.message("ID: ")
+#server_ip = "96.225.21.203"
+#server_port = 25565
+#server_connection = connection.Connection(server_ip,server_port)
+#server_connection.connect()
 
 color_dict = {
     "white": 0,
@@ -50,21 +52,41 @@ def send_to_server():
 	lcd.message("Checking...  ")
 	
 	#sends
-	print(myConnection.send(Message(MessageType.CONNECTION, 0, b'/00/00')))
-	response = myConnection.message_protocol(Message(MessageType.INPUT, 0, 12598))	
+	#print(myConnection.send(Message(MessageType.CONNECTION, 0, b'/00/00')))
+	#response = myConnection.message_protocol(Message(MessageType.INPUT, 0, 12598))	
 	
-	if(response.transactionID != -1):
+	#if(response.transactionID != -1):
+#		set_color(color_dict['green'])
+#		lcd.set_cursor(0,1)
+#		name = response.messageValue[4:][1::2].decode('utf-8')
+#		lcd.message('ID is invalid 	\n' + name)
+#	else:
+#		set_color(color_dict['red'])
+#		lcd.set_cursor(0,1)
+#		lcd.message("ID is invalid			")
+
+	rObj = makeRec(txt, kioskNumber)
+	
+	if (rObj.works):
 		set_color(color_dict['green'])
-		lcd.set_cursor(0,1)
-		name = response.messageValue[4:][1::2].decode('utf-8')
-		lcd.message('ID is invalid 	\n' + name)
+		lcd.set_cursor(0,0)
+		welcStr = ''
+		if (rObj.leaving):
+			welcStr = "Goodbye     \n" + rObj.names + ""
+		else:
+			welcStr = "Welcome back\n" + rObj.names + ""
+		lcd.message(welcStr)
+		time.sleep(1.5)
 	else:
 		set_color(color_dict['red'])
 		lcd.set_cursor(0,1)
-		lcd.message("ID is invalid			")
-	
+		lcd.message("              ")
+		lcd.set_cursor(0,0)
+		lcd.message("ID not found")		
+		time.sleep(2.5)
+
 	#sets the color back to normal	
-	time.sleep(.5)
+	
 	set_color(color_dict['null'])
 	return
 
@@ -74,9 +96,9 @@ def reset():
 	txt = ""
 	print("RESETTING")
 	lcd.set_cursor(0,1)
-	lcd.message("             ")
+	lcd.message("                ")
 	lcd.home()
-	lcd.message("ID:      ")
+	lcd.message("ID:             ")
 	lcd.set_cursor(4, 0)
 	set_color(color_dict['white'])
 	return
