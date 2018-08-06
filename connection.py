@@ -1,5 +1,8 @@
 from enum import Enum
 import socket
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE, SIG_DFL)
+
 
 class DeviceType(Enum):
     KIOSK = 0
@@ -40,8 +43,9 @@ class Message:
         transaction_id_binary = self.pad(bin(self.transactionID)[2:], 64)
 
         message_binary = [bin(i)[2:].rjust(8,'0') for i in self.messageValue]
-        message_length = len(message_binary)
+        message_length = 4
         message_binary = "".join(message_binary)
+        message_binary = Message.pad(message_binary, 32, '0')
         message_length_binary = Message.pad(bin(message_length)[2:], 32, '0')
 
         full_message_bitstring = message_type_binary+transaction_id_binary+message_length_binary+message_binary
@@ -53,8 +57,8 @@ class Message:
     @staticmethod
     def message_from_bytes(bytestring):
         x = Message(0,0,0)
-        x.messageType = MessageType(int.from_bytes(bytestring[0:4], byteorder='big'))
-        x.transactionID = int.from_bytes(bytestring[4:12], byteorder='big')
+        x.messageType = MessageType(int.from_bytes(bytestring[0:4], byteorder='big', signed=False))
+        x.transactionID = int.from_bytes(bytestring[4:12], byteorder='big', signed=False)
         x.messageValue = bytestring[16:]
         return x
 
@@ -79,11 +83,15 @@ class Connection:
         print("CLOSED CONNECTION TO SERVER", self.ip_address, self.port)
 
     def send(self, message):
-        self.connection.sendall(message.get_binary())
+        binary = message.get_binary()
+        #print(binary)
+        self.connection.sendall(binary)
         print("SEND", self.ip_address, self.port, message.get_binary(), len(message.get_binary())) # convert binary string to hex
 
     def recieve(self):
         data = self.connection.recv(4096)
+        print(data)
+        #return data
         return Message.message_from_bytes(data)
 
     def ack(self):
@@ -91,8 +99,9 @@ class Connection:
 
     def message_protocol(self, message):
         self.send(message)
+        #data = self.recieve()
+        #self.ack()
         data = self.recieve()
-        self.ack()
         return data
 
 
