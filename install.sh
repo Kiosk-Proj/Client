@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #install Adafruit
 cd /tmp
@@ -10,11 +10,13 @@ sudo rm -rf /tmp/Adafruit_Python_CharLCD
 
 #Make directories if they don't already exist
 cd ~
-if [ ! -d "kiosk" ] then
+if [ ! -d "kiosk" ]
+then
 	mkdir kiosk
 fi
 cd kiosk
-if [ ! -d "client" ] then
+if [ ! -d "client" ]
+then
 	mkdir client
 fi
 
