@@ -65,7 +65,7 @@ def send_to_server():
 #		lcd.set_cursor(0,1)
 #		lcd.message("ID is invalid			")
 
-	rObj = makeRec(txt, kioskNumber)
+	rObj = makeRec(txt)
 	
 	if (rObj.works):
 		set_color(color_dict['green'])
