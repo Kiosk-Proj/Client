@@ -20,9 +20,9 @@ def makeRec(userID):
 		print(rdata)
 	except:
 		print("Server Error")
-		returnObj(False, "REE", False)
+		return returnObj(False, "REE", False, failed = True)
 
-	return returnObj(True, rdata["name"], not rdata['in'])
+	return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'])
 
 if __name__ == '__main__':
 	print(makeRec("19422"))
