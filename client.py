@@ -69,10 +69,12 @@ def send_to_server():
 	
 	if (rObj.failed):
                 set_color(color_dict['red'])
-		lcd.message("Server Error")
+		lcd.set_cursor(0,0)
+                lcd.message("Server Error")
 		lcd.set_cursor(0,1)
 		lcd.message("Contact Office")
-	else:
+                time.sleep(2)
+        else:
 		if (rObj.works):
                         set_color(color_dict['green'])
 			lcd.set_cursor(0,0)
@@ -89,7 +91,8 @@ def send_to_server():
 				lcd.set_cursor(0,0)
 				lcd.message("No Senior Priv\n" + rObj.names + "")
 			else:
-				lcd.message("ID not found")     
+				lcd.set_cursor(0,0)
+                                lcd.message("ID not found")     
 			time.sleep(2)
 
 
