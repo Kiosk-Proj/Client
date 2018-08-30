@@ -21,7 +21,7 @@ def makeRec(userID):
 		print("Server Error")
 		returnObj(False, "REE", False)
 
-	return returnObj(True, rdata["name"], rdata['seniorPriv'])
+	return returnObj(True, rdata["name"], not rdata['in'])
 	# isAccepted = rdata['accepted']
 
 	# return returnObj(isAccepted, rdata['name'], rdata['leaving'])
