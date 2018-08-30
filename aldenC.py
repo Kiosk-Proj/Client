@@ -26,7 +26,7 @@ def makeRec(userID):
 	if rdata['id'] == -1:
 		return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'])
 	else:
-		return return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'], withInfo=True)
+		return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'], withInfo=True)
 
 if __name__ == '__main__':
 	print(makeRec("19422"))
