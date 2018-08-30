@@ -1,11 +1,12 @@
 import requests
 
 class returnObj:
-	def __init__(self, works, names, leaving, failed=False):
+	def __init__(self, works, names, leaving, failed=False, withInfo=False):
 		self.works = works
 		self.names = names
 		self.leaving = leaving
 		self.failed=failed
+		self.withInfo = withInfo
 
 def makeRec(userID):
 	iniFile = open("ini.txt", "r")
@@ -22,7 +23,10 @@ def makeRec(userID):
 		print("Server Error")
 		return returnObj(False, "REE", False, failed = True)
 
-	return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'])
+	if rdata['id'] == -1:
+		return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'])
+	else:
+		return return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'], withInfo=True)
 
 if __name__ == '__main__':
 	print(makeRec("19422"))

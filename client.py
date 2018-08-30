@@ -67,28 +67,51 @@ def send_to_server():
 
 	rObj = makeRec(txt)
 	
-	if (rObj.works):
-		set_color(color_dict['green'])
-		lcd.set_cursor(0,0)
-		welcStr = ''
-		if (rObj.leaving):
-			welcStr = "Goodbye     \n" + rObj.names + ""
-		else:
-			welcStr = "Welcome back\n" + rObj.names + ""
-		lcd.message(welcStr)
-		time.sleep(1.5)
-	else:
-		set_color(color_dict['red'])
-		lcd.set_cursor(0,1)
-		lcd.message("              ")
-		lcd.set_cursor(0,0)
-		if (rObj.failed):
-			lcd.message("Server Error")
-			lcd.set_cursor(0,1)
-			lcd.message("Contact Office")
-		else:
-			lcd.message("ID not found")		
-		time.sleep(2.5)
+    if (rObj.failed):
+        lcd.message("Server Error")
+        lcd.set_cursor(0,1)
+        lcd.message("Contact Office")
+    else:
+        if (rObj.works):
+           set_color(color_dict['green'])
+            lcd.set_cursor(0,0)
+            welcStr = ''
+            if (rObj.leaving):
+                welcStr = "Goodbye     \n" + rObj.names + ""
+            else:
+                welcStr = "Welcome back\n" + rObj.names + ""
+            lcd.message(welcStr)
+            time.sleep(2) 
+        else:
+            if (rObj.withInfo):
+                lcd.set_cursor(0,0)
+                lcd.message("No Senior Priv\n" + rObj.names + "")
+                time.sleep(2)
+            else:
+                lcd.message("ID not found")     
+            time.sleep(2)
+
+
+	# if (rObj.works):
+	# 	set_color(color_dict['green'])
+	# 	lcd.set_cursor(0,0)
+	# 	welcStr = ''
+	# 	if (rObj.leaving):
+	# 		welcStr = "Goodbye     \n" + rObj.names + ""
+	# 	else:
+	# 		welcStr = "Welcome back\n" + rObj.names + ""
+	# 	lcd.message(welcStr)
+	# 	time.sleep(1.5)
+	# else:
+	# 	set_color(color_dict['red'])
+	# 	lcd.set_cursor(0,1)
+	# 	lcd.message("              ")
+	# 	lcd.set_cursor(0,0)
+	# 	if (rObj.failed):
+			
+	# 	else:
+	# 		lcd.message("ID not found")		
+	# 	time.sleep(2.5)
 
 	#sets the color back to normal	
 	
