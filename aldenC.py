@@ -22,6 +22,7 @@ def makeRec(userID):
 	except:
 		print("Server Error")
 		return returnObj(False, "REE", False, failed = True)
+	return returnObj(False, "REE", False, failed = True)
 
 	if rdata['id'] == -1:
 		return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'])
