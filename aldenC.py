@@ -4,7 +4,8 @@ class returnObj:
 	def __init__(self, works, names, leaving, failed=False, withInfo=False):
 		self.works = works
 		self.names = names
-		self.leaving = leaving
+		print(names)
+                self.leaving = leaving
 		self.failed=failed
 		self.withInfo = withInfo
 
