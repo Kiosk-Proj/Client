@@ -7,17 +7,6 @@ class returnObj:
 		self.leaving = leaving
 		self.failed=failed
 
-#<<<<<<< HEAD
-#def makeRec(userID, kiosk)#
-#	furl = "http://72.79.54.70:55622/acceptedID/" + userID + "/" + str(kiosk)
-#	try:	
-#		r = requests.get(url = furl, params = {})
-#		rdata = r.json()
-#		isAccepted = rdata['accepted']
-#		return returnObj(isAccepted, rdata['name'], rdata['leaving'])
-#	except:
-#		return returnObj(False, "Server", False, failed=True)
-#=======
 def makeRec(userID):
 	iniFile = open("ini.txt", "r")
 	rURL = iniFile.readline().rstrip()
@@ -34,10 +23,6 @@ def makeRec(userID):
 		returnObj(False, "REE", False)
 
 	return returnObj(True, rdata["name"], not rdata['in'])
-	# isAccepted = rdata['accepted']
-
-	# return returnObj(isAccepted, rdata['name'], rdata['leaving'])
-#>>>>>>> 02c60725d6d70d07122d51ad25aeced7d54ee965
 
 if __name__ == '__main__':
 	print(makeRec("19422"))
