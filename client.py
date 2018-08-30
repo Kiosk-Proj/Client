@@ -82,7 +82,12 @@ def send_to_server():
 		lcd.set_cursor(0,1)
 		lcd.message("              ")
 		lcd.set_cursor(0,0)
-		lcd.message("ID not found")		
+		if (rObj.failed):
+			lcd.message("Server Error")
+			lcd.set_cursor(0,1)
+			lcd.message("Contact Office")
+		else:
+			lcd.message("ID not found")		
 		time.sleep(2.5)
 
 	#sets the color back to normal	
