@@ -68,6 +68,7 @@ def send_to_server():
 	rObj = makeRec(txt)
 	
 	if (rObj.failed):
+        set_color(color_dict['red'])
 		lcd.message("Server Error")
 		lcd.set_cursor(0,1)
 		lcd.message("Contact Office")
@@ -83,6 +84,7 @@ def send_to_server():
 			lcd.message(welcStr)
 			time.sleep(2) 
 		else:
+            set_color(color_dict['red'])
 			if (rObj.withInfo):
 				lcd.set_cursor(0,0)
 				lcd.message("No Senior Priv\n" + rObj.names + "")
