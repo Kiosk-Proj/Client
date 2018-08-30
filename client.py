@@ -67,29 +67,28 @@ def send_to_server():
 
 	rObj = makeRec(txt)
 	
-    if (rObj.failed):
-        lcd.message("Server Error")
-        lcd.set_cursor(0,1)
-        lcd.message("Contact Office")
-    else:
-        if (rObj.works):
-           set_color(color_dict['green'])
-            lcd.set_cursor(0,0)
-            welcStr = ''
-            if (rObj.leaving):
-                welcStr = "Goodbye     \n" + rObj.names + ""
-            else:
-                welcStr = "Welcome back\n" + rObj.names + ""
-            lcd.message(welcStr)
-            time.sleep(2) 
-        else:
-            if (rObj.withInfo):
-                lcd.set_cursor(0,0)
-                lcd.message("No Senior Priv\n" + rObj.names + "")
-                time.sleep(2)
-            else:
-                lcd.message("ID not found")     
-            time.sleep(2)
+	if (rObj.failed):
+		lcd.message("Server Error")
+		lcd.set_cursor(0,1)
+		lcd.message("Contact Office")
+	else:
+		if (rObj.works):
+			set_color(color_dict['green'])
+			lcd.set_cursor(0,0)
+			welcStr = ''
+			if (rObj.leaving):
+				welcStr = "Goodbye     \n" + rObj.names + ""
+			else:
+				welcStr = "Welcome back\n" + rObj.names + ""
+			lcd.message(welcStr)
+			time.sleep(2) 
+		else:
+			if (rObj.withInfo):
+				lcd.set_cursor(0,0)
+				lcd.message("No Senior Priv\n" + rObj.names + "")
+			else:
+				lcd.message("ID not found")     
+			time.sleep(2)
 
 
 	# if (rObj.works):
