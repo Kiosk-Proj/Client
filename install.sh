@@ -26,9 +26,10 @@ fi
 echo Cloning sources...
 git clone https://github.com/Kiosk-Proj/Client client
 
+curl http://96.225.21.203:8080/get > /home/pi/kiosk/client/ini.txt
 cd client
 
 #Add to startup script
 echo Setting startup script...
-sudo sed -i $(wc -l /etc/network/interfaces | cut -f1 -d' ')'ipython /home/pi/kiosk/client/client.py &' /etc/rc.local
+sudo sed -i $(wc -l /etc/network/interfaces | cut -f1 -d' ')'icurl http://96.225.21.203:8080/get?'$1' > /home/pi/kiosk/client/ini.txt && python /home/pi/kiosk/client/client.py &' /etc/rc.local
 echo Installation complete!
