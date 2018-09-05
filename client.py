@@ -100,7 +100,7 @@ def send_to_server():
 		GPIO.output(row_pins[2], GPIO.HIGH)
 		GPIO.output(row_pins[3], GPIO.HIGH)
 		start_time = time.time()
-		while time.time() - start_time < 2000:
+		while time.time() - start_time < 2:
 			for col in col_pins:
 				if (GPIO.input(col)):
 					GPIO.output(row_pins[0], GPIO.LOW)
