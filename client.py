@@ -79,13 +79,13 @@ def send_to_server():
                         set_color(color_dict['green'])
 			lcd.set_cursor(0,0)
 			welcStr = "ID Accepted \n" + rObj.names + ""
-'''
+                        '''
 			welcStr = ''
 			if (rObj.leaving):
 				welcStr = "Goodbye     \n" + rObj.names + ""
 			else:
 				welcStr = "Welcome Back\n" + rObj.names + ""
-'''
+                        '''
 			lcd.message(welcStr)
 		else:
                         set_color(color_dict['red'])
