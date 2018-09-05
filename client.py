@@ -206,7 +206,7 @@ GPIO.output(row_pins, GPIO.LOW)
 buttons_pressed = [False] * 12
 pressing = False
 current = -1
-
+#comment
 #Set up LCD
 lcd.show_cursor(True)
 lcd.home()
