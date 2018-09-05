@@ -78,13 +78,15 @@ def send_to_server():
 		if (rObj.works):
                         set_color(color_dict['green'])
 			lcd.set_cursor(0,0)
+			welcStr = "ID Accepted \n" + rObj.names + ""
+'''
 			welcStr = ''
 			if (rObj.leaving):
 				welcStr = "Goodbye     \n" + rObj.names + ""
 			else:
-				welcStr = "Welcome back\n" + rObj.names + ""
+				welcStr = "Welcome Back\n" + rObj.names + ""
+'''
 			lcd.message(welcStr)
-			time.sleep(2) 
 		else:
                         set_color(color_dict['red'])
 			if (rObj.withInfo):
@@ -93,7 +95,19 @@ def send_to_server():
 			else:
 				lcd.set_cursor(0,0)
                                 lcd.message("ID not found")     
-			time.sleep(2)
+		GPIO.output(row_pins[0], GPIO.HIGH)
+		GPIO.output(row_pins[1], GPIO.HIGH)
+		GPIO.output(row_pins[2], GPIO.HIGH)
+		GPIO.output(row_pins[3], GPIO.HIGH)
+		start_time = time.time()
+		while time.time() - start_time < 2000:
+			for col in col_pins:
+				if (GPIO.input(col)):
+					GPIO.output(row_pins[0], GPIO.LOW)
+					GPIO.output(row_pins[1], GPIO.LOW)
+					GPIO.output(row_pins[2], GPIO.LOW)
+					GPIO.output(row_pins[3], GPIO.LOW)
+					return
 
 
 	# if (rObj.works):
