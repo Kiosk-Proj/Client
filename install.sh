@@ -30,5 +30,5 @@ cd client
 
 #Add to startup script
 echo Setting startup script...
-sudo sed -i $(wc -l /etc/network/interfaces | cut -f1 -d' ')'ipython /home/pi/kiosk/client/client.py &' /etc/rc.local
+sudo sed -i $(wc -l /etc/rc.local | cut -f1 -d' ')'icat /home/pi/kiosk/client/autostart.sh | sh' /etc/rc.local
 echo Installation complete!
