@@ -3,7 +3,7 @@ SECONDS=$(date +"%s")
 while ! ifconfig | grep "172\.20\.94\." > /dev/null;
 do
 	echo "Wifi still not connected..."
-	if [ $(($(date +"%s")-$SECONDS)) -gt 5 ]; then
+	if [ $(($(date +"%s")-$SECONDS)) -gt 10 ]; then
 		internet=false
 		echo "Internet connection timed out."
 		break
