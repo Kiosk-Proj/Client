@@ -1,4 +1,6 @@
 import requests
+import gevent
+from gevent import Timeout
 
 class returnObj:
 	def __init__(self, works, names, leaving, failed=False, withInfo=False):
@@ -9,14 +11,24 @@ class returnObj:
 		self.failed=failed
 		self.withInfo = withInfo
 
+r = None
+
+def request_server(): 
+	global r
+	r = requests.get(url = rURL, params = {"id":str(userID), "kiosk":str(kNum)})
+
+
 def makeRec(userID):
+	global r
 	iniFile = open("/home/pi/kiosk/client/ini.txt", "r")
 	rURL = iniFile.readline().rstrip()
 	kNum = int(iniFile.readline().rstrip())
 
 	# furl = "http://72.79.54.70:55622/acceptedID/" + userID + "/" + str(kiosk)
+	timeout = Timeout(3)
+	timeout.start()
 	try:
-		r = requests.get(url = rURL, params = {"id":str(userID), "kiosk":str(kNum)})
+		gevent.start(request_server).join()
 		print("finished")
 		rdata = r.json()
 		print(rdata)

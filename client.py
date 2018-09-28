@@ -3,6 +3,8 @@ import Adafruit_CharLCD as LCDLib
 import math
 import time
 import random
+import gevent
+from gevent import Timeout
 #import connection
 from aldenC import *
 from subprocess import call	
@@ -108,6 +110,7 @@ def send_to_server():
 					GPIO.output(row_pins[2], GPIO.LOW)
 					GPIO.output(row_pins[3], GPIO.LOW)
 					return
+			time.sleep(21)
 
 
 	# if (rObj.works):
@@ -173,6 +176,7 @@ def submit():
             send_to_server()
             reset()
             return
+        time.sleep(21)
 		
 def press(id):
     global txt
@@ -227,4 +231,5 @@ while True:
                 elif not current and buttons_pressed[button_id - 1]:
                         buttons_pressed[button_id - 1] = False 
         GPIO.output(rp, GPIO.LOW)
+    time.sleep(21)
 GPIO.cleanup()
