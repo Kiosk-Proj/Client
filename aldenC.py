@@ -32,9 +32,11 @@ def makeRec(userID):
 		print("finished")
 		rdata = r.json()
 		print(rdata)
-	except:
+	except: 
 		print("Server Error")
 		return returnObj(False, "REE", False, failed = True)
+    finally:
+        timeout.close()
 
 	if rdata['id'] == str(-1):
 		return returnObj(rdata['seniorPriv'], rdata["name"], not rdata['in'])
