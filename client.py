@@ -3,6 +3,11 @@ import Adafruit_CharLCD as LCDLib
 import math
 import time
 import random
+
+import gevent.monkey
+gevent.monkey.patch_socket()
+gevent.monkey.patch_all()
+
 import gevent
 from gevent import Timeout
 #import connection
